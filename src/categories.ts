@@ -1,11 +1,13 @@
-export type CategoryType = 'intro' | 'animal' | 'environment';
+import { categoryToFilePrefix } from './lib/supabase';
+
+export type CategoryType = 'intro' | 'animal';
 
 export type Category = {
   name: string;
   type: CategoryType;
 };
 
-/** Display title for a row (e.g. "great white shark" → "Great White Shark"). */
+/** Display title (e.g. "great white shark" → "Great White Shark"). */
 export function formatCategoryTitle(name: string): string {
   return name
     .split(' ')
@@ -13,9 +15,15 @@ export function formatCategoryTitle(name: string): string {
     .join(' ');
 }
 
+/** URL slug for routes (e.g. "great white shark" → "great-white-shark"). */
+export function categoryToSlug(name: string): string {
+  return categoryToFilePrefix(name);
+}
+
 const animals: string[] = [
   'bald eagle',
   'cheetah',
+  'crocodile',
   'dolphin',
   'elephant',
   'flamingo',
@@ -31,22 +39,15 @@ const animals: string[] = [
   'wolf',
 ];
 
-/** Habitat / scene folders in Supabase (previously grouped into Intro). */
-const environments: string[] = [
-  'african savanna',
-  'arctic tundra',
-  'coral reef',
-  'forest floor',
-  'mountain landscape',
-  'storm clouds',
-  'tropical rainforest',
-  'underwater ocean',
-];
-
 export const categories: Category[] = [
   { name: 'intro', type: 'intro' },
   ...animals.map((name) => ({ name, type: 'animal' as const })),
-  ...environments.map((name) => ({ name, type: 'environment' as const })),
 ];
 
+export const animalCategories = categories.filter((cat) => cat.type === 'animal');
+
 export const categoryNames = categories.map((cat) => cat.name);
+
+export function findCategoryBySlug(slug: string): Category | undefined {
+  return categories.find((cat) => categoryToSlug(cat.name) === slug);
+}

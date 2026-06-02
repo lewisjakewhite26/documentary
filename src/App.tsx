@@ -1,19 +1,31 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import ErrorBoundary from './components/ErrorBoundary';
 import { VideosProvider } from './context/VideosContext';
-import CategoryPage from './pages/CategoryPage';
-import HomePage from './pages/HomePage';
+
+const HomePage = lazy(() => import('./pages/HomePage'));
+const CategoryPage = lazy(() => import('./pages/CategoryPage'));
+
+const PageFallback = () => (
+  <div className="min-h-screen bg-netflix-bg flex items-center justify-center text-gray-400 text-lg">
+    Loading…
+  </div>
+);
 
 const App: React.FC = () => {
   return (
-    <BrowserRouter>
-      <VideosProvider>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/watch/:slug" element={<CategoryPage />} />
-        </Routes>
-      </VideosProvider>
-    </BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <VideosProvider>
+          <Suspense fallback={<PageFallback />}>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/watch/:slug" element={<CategoryPage />} />
+            </Routes>
+          </Suspense>
+        </VideosProvider>
+      </BrowserRouter>
+    </ErrorBoundary>
   );
 };
 

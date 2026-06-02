@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import type { VideoMeta } from '../types';
 import { downloadVideo } from '../lib/download';
+import { handleFocusTrap } from '../lib/focus-trap';
 
 interface VideoModalProps {
   video: VideoMeta;
@@ -14,8 +15,9 @@ const enforceSilent = (el: HTMLVideoElement) => {
 };
 
 const VideoModal: React.FC<VideoModalProps> = ({ video, onClose }) => {
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(false);
   const [buffering, setBuffering] = useState(false);
   const [downloading, setDownloading] = useState(false);
@@ -73,7 +75,12 @@ const VideoModal: React.FC<VideoModalProps> = ({ video, onClose }) => {
     closeButtonRef.current?.focus();
 
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') {
+        onClose();
+        return;
+      }
+      const panel = panelRef.current;
+      if (panel) handleFocusTrap(panel, e);
     };
     window.addEventListener('keydown', onKeyDown);
 
@@ -94,6 +101,7 @@ const VideoModal: React.FC<VideoModalProps> = ({ video, onClose }) => {
       onClick={onClose}
     >
       <div
+        ref={panelRef}
         className="relative w-full max-w-5xl rounded-2xl bg-zinc-900 shadow-2xl border border-zinc-700 overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >

@@ -1,21 +1,26 @@
 // src/lib/supabase.ts
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import type { VideoMeta } from '../types';
+import { displayVideoTitle } from './display';
+import {
+  getSupabaseConfigMessage,
+  isSupabaseConfigured,
+  isSupabaseEnvValid,
+} from './env';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL?.trim() ?? '';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY?.trim() ?? '';
 
-export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
+export { isSupabaseConfigured, isSupabaseEnvValid, getSupabaseConfigMessage };
 
-export const SUPABASE_CONFIG_MESSAGE =
-  'Videos need Supabase: copy .env.example to .env, add your project URL and anon key, then restart the dev server.';
+export const SUPABASE_CONFIG_MESSAGE = getSupabaseConfigMessage();
 
 let supabaseClient: SupabaseClient | null = null;
 
 function getSupabase(): SupabaseClient | null {
-  if (!isSupabaseConfigured) return null;
+  if (!isSupabaseEnvValid) return null;
   if (!supabaseClient) {
-    supabaseClient = createClient(supabaseUrl!, supabaseAnonKey!);
+    supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
   }
   return supabaseClient;
 }
@@ -30,7 +35,7 @@ export function categoryToFilePrefix(category: string): string {
   return category.toLowerCase().replace(/\s+/g, '-');
 }
 
-function fileMatchesCategory(filename: string, category: string): boolean {
+export function fileMatchesCategory(filename: string, category: string): boolean {
   const prefix = categoryToFilePrefix(category);
   return filename.toLowerCase().startsWith(`${prefix}-`);
 }
@@ -46,9 +51,12 @@ export function getVideoPublicUrl(filename: string): string | null {
 }
 
 function fileToVideoMeta(filename: string): VideoMeta {
-  const title = filename.replace(/\.[^/.]+$/, '');
   const publicUrl = getVideoPublicUrl(filename);
-  return { filename, title, publicUrl: publicUrl ?? '' };
+  return {
+    filename,
+    title: displayVideoTitle(filename),
+    publicUrl: publicUrl ?? '',
+  };
 }
 
 export type FetchAllVideosResult = {

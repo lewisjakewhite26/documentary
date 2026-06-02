@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import Layout from '../components/Layout';
 import Row from '../components/Row';
 import VideoModal from '../components/VideoModal';
 import { findCategoryBySlug, formatCategoryTitle } from '../categories';
-import { isSupabaseConfigured } from '../lib/supabase';
+import { isSupabaseEnvValid } from '../lib/supabase';
 import { useVideos } from '../hooks/useVideos';
 import type { VideoMeta } from '../types';
 
@@ -12,6 +12,7 @@ const CategoryPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const { videosByCategory, loading, loadError } = useVideos();
   const [selectedVideo, setSelectedVideo] = useState<VideoMeta | null>(null);
+  const lastFocusedRef = useRef<HTMLElement | null>(null);
 
   const category = slug ? findCategoryBySlug(slug) : undefined;
 
@@ -21,6 +22,19 @@ const CategoryPage: React.FC = () => {
 
   const title = category.type === 'intro' ? 'Intro' : formatCategoryTitle(category.name);
   const videos = videosByCategory[category.name] ?? [];
+
+  const handleVideoSelect = (video: VideoMeta) => {
+    lastFocusedRef.current = document.activeElement as HTMLElement | null;
+    setSelectedVideo(video);
+  };
+
+  const handleModalClose = () => {
+    setSelectedVideo(null);
+    requestAnimationFrame(() => {
+      lastFocusedRef.current?.focus();
+      lastFocusedRef.current = null;
+    });
+  };
 
   return (
     <Layout>
@@ -36,8 +50,8 @@ const CategoryPage: React.FC = () => {
           title={title}
           videos={videos}
           loading={loading}
-          error={isSupabaseConfigured ? loadError : null}
-          onVideoSelect={setSelectedVideo}
+          error={isSupabaseEnvValid ? loadError : null}
+          onVideoSelect={handleVideoSelect}
         />
       </main>
 
@@ -45,7 +59,7 @@ const CategoryPage: React.FC = () => {
         <VideoModal
           key={selectedVideo.filename}
           video={selectedVideo}
-          onClose={() => setSelectedVideo(null)}
+          onClose={handleModalClose}
         />
       )}
     </Layout>

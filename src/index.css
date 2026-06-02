@@ -16,6 +16,30 @@ body {
   @apply bg-netflix-bg text-white font-sans antialiased;
 }
 
+/* Screen-reader-only until focused (skip link) */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+.sr-only:focus,
+.sr-only:focus-visible {
+  position: absolute;
+  width: auto;
+  height: auto;
+  padding: 0;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
 /* Card hover effect */
 .card-hover {
   @apply transform transition-transform duration-300 ease-out scale-105 shadow-hover;

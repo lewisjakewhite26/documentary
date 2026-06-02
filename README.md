@@ -1,73 +1,80 @@
-# React + TypeScript + Vite
+# MR WHITEFLIX
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A child-friendly wildlife video browser (Netflix-style UI) for classroom iPads. Videos are hosted on **Supabase Storage**; the app lists and plays public MP4s by filename.
 
-Currently, two official plugins are available:
+**Live site:** deploy from this folder to Vercel (or similar).  
+**Repo:** [documentary](https://github.com/lewisjakewhite26/documentary)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Quick start
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+cp .env.example .env
+# Edit .env with your Supabase project URL and anon key
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Open `http://localhost:5173`.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Environment variables
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+| Variable | Description |
+|----------|-------------|
+| `VITE_SUPABASE_URL` | Project URL (`https://….supabase.co`) |
+| `VITE_SUPABASE_ANON_KEY` | Anon **public** key (Project Settings → API) |
+
+**Local:** `.env` (gitignored).  
+**Production (Vercel):** Project → Settings → Environment Variables → add both → redeploy.
+
+## Video storage
+
+- **Bucket:** `portfolio-images`
+- **Folder:** `summer2/`
+- Files must be **public** (or use policies that allow anonymous read).
+
+### Filename rules
+
+Animal clips:
+
+```text
+{animal-slug}-{id}.mp4
 ```
+
+Examples:
+
+- `crocodile-3.mp4`
+- `great-white-shark-12.mp4`
+- `polar-bear-1.mp4`
+
+The slug matches the animal name in `src/categories.ts` (spaces → hyphens, lowercase).
+
+**Intro / habitats:** any other `.mp4` in the folder (e.g. `savanna-sunset.mp4`) appears under **Intro** on the home page.
+
+Supported extensions: `.mp4`, `.mov`, `.webm`, `.m4v`.
+
+## Adding a new animal
+
+1. Upload videos to Supabase: `summer2/{slug}-{id}.mp4`
+2. Add the display name to the `animals` array in `src/categories.ts`
+3. Redeploy (or refresh locally)
+
+Routes are automatic: `/watch/crocodile`, etc.
+
+## Scripts
+
+| Command | Purpose |
+|---------|---------|
+| `npm run dev` | Local dev server |
+| `npm run build` | Production build |
+| `npm run preview` | Preview production build |
+| `npm run lint` | ESLint |
+| `npm test` | Vitest unit tests |
+| `npm run test:e2e` | Playwright smoke tests (builds app, mocks Supabase list) |
+
+## Stack
+
+React 19, TypeScript, Vite 8, Tailwind CSS 4, React Router, Supabase JS client.
+
+## CI
+
+GitHub Actions runs lint, tests, and build on push/PR to `main` (see `.github/workflows/ci.yml`).

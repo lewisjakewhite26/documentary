@@ -1,6 +1,11 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import type { VideoMeta } from '../types';
-import { downloadVideo } from '../lib/download';
+import {
+  downloadVideo,
+  formatDownloadSize,
+  isLargeDownload,
+  type DownloadProgress,
+} from '../lib/download';
 import { handleFocusTrap } from '../lib/focus-trap';
 
 interface VideoModalProps {
@@ -21,6 +26,7 @@ const VideoModal: React.FC<VideoModalProps> = ({ video, onClose }) => {
   const [playing, setPlaying] = useState(false);
   const [buffering, setBuffering] = useState(false);
   const [downloading, setDownloading] = useState(false);
+  const [downloadProgress, setDownloadProgress] = useState<DownloadProgress | null>(null);
   const [downloadError, setDownloadError] = useState<string | null>(null);
 
   const startPlay = useCallback(async () => {
@@ -61,13 +67,19 @@ const VideoModal: React.FC<VideoModalProps> = ({ video, onClose }) => {
 
   const handleDownload = async () => {
     setDownloadError(null);
+    setDownloadProgress(null);
     setDownloading(true);
-    const result = await downloadVideo(video.filename);
+    const result = await downloadVideo(video.filename, setDownloadProgress);
     setDownloading(false);
+    setDownloadProgress(null);
     if (!result.ok) {
       setDownloadError(result.message);
     }
   };
+
+  const downloadPercent = downloadProgress?.percent;
+  const showLargeHint = isLargeDownload(downloadProgress?.total ?? null);
+  const downloadStatusId = 'video-download-status';
 
   useEffect(() => {
     const prevOverflow = document.body.style.overflow;
@@ -98,6 +110,7 @@ const VideoModal: React.FC<VideoModalProps> = ({ video, onClose }) => {
       role="dialog"
       aria-modal="true"
       aria-labelledby="video-modal-title"
+      aria-describedby={downloading ? downloadStatusId : undefined}
       onClick={onClose}
     >
       <div
@@ -204,6 +217,7 @@ const VideoModal: React.FC<VideoModalProps> = ({ video, onClose }) => {
             type="button"
             onClick={handleDownload}
             disabled={downloading || !video.publicUrl}
+            aria-describedby={downloading ? downloadStatusId : undefined}
             className="flex items-center justify-center gap-3 min-h-[4.5rem] sm:min-h-20 rounded-2xl bg-netflix-red text-white text-2xl font-bold hover:bg-red-600 disabled:opacity-50 focus:outline-none focus:ring-4 focus:ring-netflix-red/50"
           >
             <svg className="w-10 h-10" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
@@ -212,6 +226,53 @@ const VideoModal: React.FC<VideoModalProps> = ({ video, onClose }) => {
             {downloading ? 'Downloading…' : 'Download'}
           </button>
         </div>
+
+        {downloading && (
+          <div
+            id={downloadStatusId}
+            className="px-4 pb-4 sm:px-8 space-y-3"
+            role="status"
+            aria-live="polite"
+          >
+            {downloadPercent !== null && downloadPercent !== undefined ? (
+              <>
+                <p className="text-lg text-gray-200">
+                  Downloading… <span className="font-bold text-white">{downloadPercent}%</span>
+                  {downloadProgress?.total ? (
+                    <span className="text-gray-400">
+                      {' '}
+                      ({formatDownloadSize(downloadProgress.loaded)} of{' '}
+                      {formatDownloadSize(downloadProgress.total)})
+                    </span>
+                  ) : null}
+                </p>
+                <div
+                  className="h-4 w-full rounded-full bg-zinc-700 overflow-hidden"
+                  role="progressbar"
+                  aria-valuenow={downloadPercent}
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                  aria-label="Download progress"
+                >
+                  <div
+                    className="h-full bg-netflix-red transition-[width] duration-150 ease-out"
+                    style={{ width: `${downloadPercent}%` }}
+                  />
+                </div>
+              </>
+            ) : (
+              <p className="text-lg text-gray-200">
+                Downloading… Keep this page open while the video saves.
+              </p>
+            )}
+            {showLargeHint && (
+              <p className="text-base text-yellow-200/90">
+                This is a large video — on school Wi‑Fi it can take a minute or two. Please
+                wait until it finishes.
+              </p>
+            )}
+          </div>
+        )}
 
         {downloadError && (
           <p className="px-4 pb-6 sm:px-8 text-red-400 text-lg" role="alert">

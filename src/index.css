@@ -1,0 +1,27 @@
+/* src/index.css */
+@import 'tailwindcss';
+@config '../tailwind.config.js';
+
+/* Hide native scrollbar */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Global body styling */
+body {
+  @apply bg-netflix-bg text-white font-sans antialiased;
+}
+
+/* Card hover effect */
+.card-hover {
+  @apply transform transition-transform duration-300 ease-out scale-105 shadow-hover;
+}
+
+/* Let trackpad vertical scroll pass through preview videos to the page */
+[data-video-card] video {
+  pointer-events: none;
+}

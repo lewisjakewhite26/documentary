@@ -12,7 +12,7 @@ const HomePage: React.FC = () => {
   return (
     <Layout>
       <Hero />
-      <main className="p-4 md:p-8 max-w-6xl mx-auto space-y-8">
+      <main className="w-full max-w-6xl mx-auto px-4 md:px-8 py-4 md:py-8 space-y-8">
         <section>
           <Link
             to="/watch/intro"

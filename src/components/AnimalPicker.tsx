@@ -7,7 +7,7 @@ const AnimalPicker: React.FC = () => {
   const { videosByCategory, loading } = useVideos();
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4 max-w-5xl">
+    <div className="grid w-full grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4">
       {animalCategories.map((cat) => {
         const count = videosByCategory[cat.name]?.length ?? 0;
         const slug = categoryToSlug(cat.name);

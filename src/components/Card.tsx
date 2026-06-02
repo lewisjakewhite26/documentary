@@ -45,7 +45,7 @@ const Card: React.FC<CardProps> = ({ video, onSelect }) => {
     <button
       type="button"
       data-video-card
-      className="relative w-64 md:w-80 h-36 md:h-48 flex-shrink-0 mr-4 cursor-pointer card-hover overflow-hidden rounded-md text-left focus:outline-none focus:ring-4 focus:ring-netflix-red/70"
+      className="relative w-full aspect-[4/3] cursor-pointer card-hover overflow-hidden rounded-xl text-left focus:outline-none focus:ring-4 focus:ring-netflix-red/70"
       onClick={() => onSelect(video)}
       onWheel={forwardVerticalWheel}
       aria-label={`Watch ${video.title}`}

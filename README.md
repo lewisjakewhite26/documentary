@@ -42,7 +42,9 @@ Animal clips:
 
 Examples:
 
+- `cheetah-2.mp4`
 - `crocodile-3.mp4`
+- `electric-eel-1.mp4`
 - `great-white-shark-12.mp4`
 - `polar-bear-1.mp4`
 

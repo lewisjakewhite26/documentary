@@ -22,6 +22,10 @@ describe('findCategoryBySlug', () => {
     expect(findCategoryBySlug('crocodile')?.name).toBe('crocodile');
   });
 
+  it('finds electric eel by slug', () => {
+    expect(findCategoryBySlug('electric-eel')?.name).toBe('electric eel');
+  });
+
   it('returns undefined for unknown slugs', () => {
     expect(findCategoryBySlug('unicorn')).toBeUndefined();
   });

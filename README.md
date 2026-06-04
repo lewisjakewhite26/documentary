@@ -55,7 +55,7 @@ The slug matches the animal name in `src/categories.ts` (spaces → hyphens, low
 
 Supported extensions: `.mp4`, `.mov`, `.webm`, `.m4v`.
 
-**Nature sounds:** MP3s in `Music/` appear on the home page under **Nature sounds** — children tap **Download** to save each calm track to their iPad. Sounds do not play on the website; wildlife videos stay silent.
+**Nature sounds:** MP3s in `Music/` — home page **Nature Sounds** card opens `/sounds` with **Play** and **Download** on each track. Wildlife videos stay silent.
 
 ## Adding a new animal
 

@@ -5,6 +5,7 @@ import { VideosProvider } from './context/VideosContext';
 
 const HomePage = lazy(() => import('./pages/HomePage'));
 const CategoryPage = lazy(() => import('./pages/CategoryPage'));
+const SoundsPage = lazy(() => import('./pages/SoundsPage'));
 
 const PageFallback = () => (
   <div className="min-h-screen bg-netflix-bg flex items-center justify-center text-gray-400 text-lg">
@@ -20,6 +21,7 @@ const App: React.FC = () => {
           <Suspense fallback={<PageFallback />}>
             <Routes>
               <Route path="/" element={<HomePage />} />
+              <Route path="/sounds" element={<SoundsPage />} />
               <Route path="/watch/:slug" element={<CategoryPage />} />
             </Routes>
           </Suspense>

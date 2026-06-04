@@ -11,7 +11,7 @@ describe('filterMusicFilenames', () => {
 
 describe('displayMusicTitle', () => {
   it('uses simple numbered labels for children', () => {
-    expect(displayMusicTitle('calm-nature-789300.mp3', 0)).toBe('Calm nature sound 1');
-    expect(displayMusicTitle('calm-nature-789302.mp3', 3)).toBe('Calm nature sound 4');
+    expect(displayMusicTitle(0)).toBe('Calm nature sound 1');
+    expect(displayMusicTitle(3)).toBe('Calm nature sound 4');
   });
 });

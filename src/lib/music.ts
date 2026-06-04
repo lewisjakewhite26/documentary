@@ -8,8 +8,8 @@ export function filterMusicFilenames(names: string[]): string[] {
   return names.filter((name) => MUSIC_AUDIO_PATTERN.test(name)).sort();
 }
 
-/** Child-friendly label for a soundscape file. */
-export function displayMusicTitle(filename: string, index: number): string {
+/** Child-friendly label for a soundscape file (by list position). */
+export function displayMusicTitle(index: number): string {
   return `Calm nature sound ${index + 1}`;
 }
 

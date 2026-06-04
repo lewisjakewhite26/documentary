@@ -114,7 +114,7 @@ const NatureSounds: React.FC = () => {
           {tracks.map((filename, index) => {
             const isDownloading = activeDownload === filename;
             const isPlaying = playingFilename === filename;
-            const title = displayMusicTitle(filename, index);
+            const title = displayMusicTitle(index);
             const hasUrl = Boolean(getMusicPublicUrl(filename));
             const busy = activeDownload !== null;
 

@@ -1,7 +1,7 @@
 // src/lib/supabase.ts
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import type { VideoMeta } from '../types';
-import { displayVideoTitle } from './display';
+import { displayVideoTitle, isCheetahRunningClip } from './display';
 import {
   getSupabaseConfigMessage,
   isSupabaseConfigured,
@@ -96,18 +96,29 @@ export async function fetchAllVideos(
     (a, b) => categoryToFilePrefix(b).length - categoryToFilePrefix(a).length
   );
 
-  const { data, error } = await client.storage.from(STORAGE_BUCKET).list(STORAGE_FOLDER, {
-    limit: 1000,
-    offset: 0,
-    sortBy: { column: 'name', order: 'asc' },
-  });
+  const files: { name: string }[] = [];
+  const pageSize = 1000;
+  let offset = 0;
 
-  if (error) {
-    console.error('Supabase list error:', error);
-    return { byCategory, error: error.message };
+  while (true) {
+    const { data, error } = await client.storage.from(STORAGE_BUCKET).list(STORAGE_FOLDER, {
+      limit: pageSize,
+      offset,
+      sortBy: { column: 'name', order: 'asc' },
+    });
+
+    if (error) {
+      console.error('Supabase list error:', error);
+      return { byCategory, error: error.message };
+    }
+
+    if (!data?.length) break;
+    files.push(...data);
+    if (data.length < pageSize) break;
+    offset += pageSize;
   }
 
-  for (const file of data) {
+  for (const file of files) {
     if (!VIDEO_FILE_PATTERN.test(file.name)) continue;
 
     let matched = false;
@@ -122,6 +133,15 @@ export async function fetchAllVideos(
     if (!matched && hasIntro) {
       byCategory[INTRO_CATEGORY].push(fileToVideoMeta(file.name));
     }
+  }
+
+  if ('cheetah' in byCategory) {
+    byCategory.cheetah.sort((a, b) => {
+      const aRunning = isCheetahRunningClip(a.filename);
+      const bRunning = isCheetahRunningClip(b.filename);
+      if (aRunning !== bRunning) return aRunning ? -1 : 1;
+      return a.filename.localeCompare(b.filename);
+    });
   }
 
   return { byCategory, error: null };

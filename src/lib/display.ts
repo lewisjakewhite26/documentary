@@ -24,12 +24,31 @@ function formatHyphenatedSlug(slug: string): string {
     .join(' ');
 }
 
-/**
- * Friendly title for UI and screen readers (e.g. "crocodile-3.mp4" → "Crocodile — Clip 3").
- */
+/** Habitat / scene clips in summer2/ (no animal page) — shown under Intro. Longest first. */
+const INTRO_HABITAT_PREFIXES = [
+  'tropical-rainforest',
+  'mountain-landscape',
+  'underwater-ocean',
+  'african-savanna',
+  'arctic-tundra',
+  'forest-floor',
+  'storm-clouds',
+  'coral-reef',
+].sort((a, b) => b.length - a.length);
+
+/** Filename uses cheetah-running-* for sprint / running clips (still under Cheetah category). */
+export function isCheetahRunningClip(filename: string): boolean {
+  return filename.toLowerCase().startsWith('cheetah-running-');
+}
+
 export function displayVideoTitle(filename: string): string {
   const base = filename.replace(/\.[^/.]+$/, '');
   const lower = base.toLowerCase();
+
+  if (lower.startsWith('cheetah-running-')) {
+    const suffix = base.slice('cheetah-running-'.length);
+    return `Cheetah — Running fast — ${formatClipSuffix(suffix)}`;
+  }
 
   const byPrefixLength = [...animalCategories].sort(
     (a, b) => categoryToFilePrefix(b.name).length - categoryToFilePrefix(a.name).length
@@ -43,9 +62,16 @@ export function displayVideoTitle(filename: string): string {
     }
   }
 
+  for (const habitat of INTRO_HABITAT_PREFIXES) {
+    if (lower.startsWith(`${habitat}-`)) {
+      const suffix = base.slice(habitat.length + 1);
+      return `Intro — ${formatHyphenatedSlug(habitat)} — ${formatClipSuffix(suffix)}`;
+    }
+  }
+
   if (lower.startsWith('intro-')) {
     return `Intro — ${formatClipSuffix(base.slice('intro-'.length))}`;
   }
 
-  return formatHyphenatedSlug(base);
+  return `Intro — ${formatHyphenatedSlug(base)}`;
 }

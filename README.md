@@ -44,6 +44,7 @@ Animal clips:
 Examples:
 
 - `cheetah-2.mp4`
+- `cheetah-running-1.mp4` (sprint clips — show first on Cheetah page, titled “Running fast”)
 - `crocodile-3.mp4`
 - `electric-eel-1.mp4`
 - `great-white-shark-12.mp4`
@@ -51,7 +52,7 @@ Examples:
 
 The slug matches the animal name in `src/categories.ts` (spaces → hyphens, lowercase).
 
-**Intro / habitats:** any other `.mp4` in the folder (e.g. `savanna-sunset.mp4`) appears under **Intro** on the home page.
+**Intro / habitats:** habitat/scene clips (`african-savanna-*`, `forest-floor-*`, `storm-clouds-*`, etc.) and any other `.mp4` that does not match an animal prefix appear under **Intro**. The app lists all files in `summer2/` (paginated) automatically.
 
 Supported extensions: `.mp4`, `.mov`, `.webm`, `.m4v`.
 

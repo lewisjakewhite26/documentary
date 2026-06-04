@@ -24,7 +24,17 @@ describe('displayVideoTitle', () => {
     expect(displayVideoTitle('intro-welcome.mp4')).toBe('Intro — Welcome');
   });
 
-  it('falls back to hyphenated words for habitat files', () => {
-    expect(displayVideoTitle('savanna-sunset.mp4')).toBe('Savanna Sunset');
+  it('titles intro habitat clips', () => {
+    expect(displayVideoTitle('african-savanna-11025493.mp4')).toBe(
+      'Intro — African Savanna — Clip 11025493'
+    );
+  });
+
+  it('falls back to intro for unknown habitat-style names', () => {
+    expect(displayVideoTitle('savanna-sunset.mp4')).toBe('Intro — Savanna Sunset');
+  });
+
+  it('titles cheetah running clips', () => {
+    expect(displayVideoTitle('cheetah-running-1.mp4')).toBe('Cheetah — Running fast — Clip 1');
   });
 });

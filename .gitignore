@@ -13,6 +13,9 @@ dist-ssr
 *.local
 .env
 
+# Generated bucket inventory (re-run scripts/generate-summer2-inventory.mjs)
+summer2-inventory.js
+
 # Playwright
 /test-results/
 /playwright-report/

@@ -11,7 +11,9 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "inventory:summer2": "node scripts/generate-summer2-inventory.mjs",
+    "analyze:summer2": "node scripts/analyze-summer2-prefixes.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.107.0",

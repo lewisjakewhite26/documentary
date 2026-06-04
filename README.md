@@ -29,7 +29,8 @@ Open `http://localhost:5173`.
 ## Video storage
 
 - **Bucket:** `portfolio-images`
-- **Folder:** `summer2/`
+- **Folder:** `summer2/` (videos)
+- **Folder:** `Music/` (calm nature soundscapes, `.mp3`)
 - Files must be **public** (or use policies that allow anonymous read).
 
 ### Filename rules
@@ -53,6 +54,8 @@ The slug matches the animal name in `src/categories.ts` (spaces → hyphens, low
 **Intro / habitats:** any other `.mp4` in the folder (e.g. `savanna-sunset.mp4`) appears under **Intro** on the home page.
 
 Supported extensions: `.mp4`, `.mov`, `.webm`, `.m4v`.
+
+**Background music:** MP3s in `Music/` play when the user taps **Music on** in the header (low volume, random tracks). Music pauses while a video modal is open; wildlife clips stay silent.
 
 ## Adding a new animal
 

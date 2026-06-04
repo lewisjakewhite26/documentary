@@ -1,6 +1,7 @@
 import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import ErrorBoundary from './components/ErrorBoundary';
+import { MusicProvider } from './context/MusicContext';
 import { VideosProvider } from './context/VideosContext';
 
 const HomePage = lazy(() => import('./pages/HomePage'));
@@ -17,12 +18,14 @@ const App: React.FC = () => {
     <ErrorBoundary>
       <BrowserRouter>
         <VideosProvider>
-          <Suspense fallback={<PageFallback />}>
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/watch/:slug" element={<CategoryPage />} />
-            </Routes>
-          </Suspense>
+          <MusicProvider>
+            <Suspense fallback={<PageFallback />}>
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/watch/:slug" element={<CategoryPage />} />
+              </Routes>
+            </Suspense>
+          </MusicProvider>
         </VideosProvider>
       </BrowserRouter>
     </ErrorBoundary>

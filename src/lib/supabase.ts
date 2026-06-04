@@ -25,6 +25,11 @@ function getSupabase(): SupabaseClient | null {
   return supabaseClient;
 }
 
+/** Shared client for storage helpers (e.g. music). */
+export function getSupabaseClient(): SupabaseClient | null {
+  return getSupabase();
+}
+
 export const STORAGE_BUCKET = 'portfolio-images';
 export const STORAGE_FOLDER = 'summer2/';
 

@@ -2,8 +2,8 @@
 
 A child-friendly wildlife video browser (Netflix-style UI) for classroom iPads. Videos are hosted on **Supabase Storage**; the app lists and plays public MP4s by filename.
 
-**Live site:** deploy from this folder to Vercel (or similar).  
-**Repo:** [documentary](https://github.com/lewisjakewhite26/documentary)
+**Live site:** [mrwhiteflix.vercel.app](https://mrwhiteflix.vercel.app) (Vercel project must use this repo, root `.`, build `npm run build`, output `dist`).  
+**Repo:** [documentary](https://github.com/lewisjakewhite26/documentary) — do not use `documentary.vercel.app` (that is an old unrelated SvelteKit deploy).
 
 ## Quick start
 

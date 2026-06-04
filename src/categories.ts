@@ -25,7 +25,6 @@ const animals: string[] = [
   'cheetah',
   'crocodile',
   'dolphin',
-  'electric eel',
   'elephant',
   'flamingo',
   'giraffe',

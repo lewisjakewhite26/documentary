@@ -5,8 +5,6 @@ import Layout from '../components/Layout';
 import { Link } from 'react-router-dom';
 import { useMusicTracks } from '../hooks/useMusicTracks';
 import { useVideos } from '../hooks/useVideos';
-import { isSupabaseEnvValid } from '../lib/supabase';
-
 const introCardClass =
   'flex items-center justify-between w-full rounded-xl bg-zinc-800 hover:bg-zinc-700 border-2 border-transparent hover:border-netflix-red focus:outline-none focus:ring-4 focus:ring-netflix-red/60 transition-colors px-6 py-5';
 
@@ -29,16 +27,14 @@ const HomePage: React.FC = () => {
             </span>
           </Link>
 
-          {isSupabaseEnvValid && (
-            <Link to="/sounds" className={introCardClass}>
-              <span className="font-netflix text-2xl md:text-3xl uppercase">Nature Sounds</span>
-              <span className="text-gray-400 text-sm md:text-base">
-                {soundsLoading
-                  ? 'Loading…'
-                  : `Calm music · ${soundCount} sound${soundCount === 1 ? '' : 's'}`}
-              </span>
-            </Link>
-          )}
+          <Link to="/sounds" className={introCardClass}>
+            <span className="font-netflix text-2xl md:text-3xl uppercase">Nature Sounds</span>
+            <span className="text-gray-400 text-sm md:text-base">
+              {soundsLoading
+                ? 'Loading…'
+                : `Calm music · ${soundCount} sound${soundCount === 1 ? '' : 's'}`}
+            </span>
+          </Link>
         </section>
 
         <section>

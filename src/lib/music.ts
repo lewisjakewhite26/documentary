@@ -4,12 +4,13 @@ export const MUSIC_FOLDER = 'Music/';
 
 export const MUSIC_AUDIO_PATTERN = /\.(mp3|m4a|ogg|wav)$/i;
 
-export const MUSIC_VOLUME = 0.28;
-
-const MUSIC_STORAGE_KEY = 'mrwhiteflix-music-enabled';
-
 export function filterMusicFilenames(names: string[]): string[] {
   return names.filter((name) => MUSIC_AUDIO_PATTERN.test(name)).sort();
+}
+
+/** Child-friendly label for a soundscape file. */
+export function displayMusicTitle(filename: string, index: number): string {
+  return `Calm nature sound ${index + 1}`;
 }
 
 export function getMusicPublicUrl(filename: string): string | null {
@@ -43,20 +44,4 @@ export async function fetchMusicTracks(): Promise<FetchMusicTracksResult> {
   }
 
   return { tracks: filterMusicFilenames((data ?? []).map((f) => f.name)), error: null };
-}
-
-export function readMusicEnabledPreference(): boolean {
-  try {
-    return sessionStorage.getItem(MUSIC_STORAGE_KEY) === 'on';
-  } catch {
-    return false;
-  }
-}
-
-export function writeMusicEnabledPreference(enabled: boolean): void {
-  try {
-    sessionStorage.setItem(MUSIC_STORAGE_KEY, enabled ? 'on' : 'off');
-  } catch {
-    /* ignore */
-  }
 }

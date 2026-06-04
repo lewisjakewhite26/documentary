@@ -7,7 +7,6 @@ import {
   type DownloadProgress,
 } from '../lib/download';
 import { handleFocusTrap } from '../lib/focus-trap';
-import { useMusic } from '../hooks/useMusic';
 
 interface VideoModalProps {
   video: VideoMeta;
@@ -21,7 +20,6 @@ const enforceSilent = (el: HTMLVideoElement) => {
 };
 
 const VideoModal: React.FC<VideoModalProps> = ({ video, onClose }) => {
-  const { pauseForVideo, resumeAfterVideo } = useMusic();
   const panelRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -82,11 +80,6 @@ const VideoModal: React.FC<VideoModalProps> = ({ video, onClose }) => {
   const downloadPercent = downloadProgress?.percent;
   const showLargeHint = isLargeDownload(downloadProgress?.total ?? null);
   const downloadStatusId = 'video-download-status';
-
-  useEffect(() => {
-    pauseForVideo();
-    return () => resumeAfterVideo();
-  }, [pauseForVideo, resumeAfterVideo]);
 
   useEffect(() => {
     const prevOverflow = document.body.style.overflow;

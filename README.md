@@ -55,7 +55,7 @@ The slug matches the animal name in `src/categories.ts` (spaces → hyphens, low
 
 Supported extensions: `.mp4`, `.mov`, `.webm`, `.m4v`.
 
-**Background music:** MP3s in `Music/` play when the user taps **Music on** in the header (low volume, random tracks). Music pauses while a video modal is open; wildlife clips stay silent.
+**Nature sounds:** MP3s in `Music/` appear on the home page under **Nature sounds** — children tap **Download** to save each calm track to their iPad. Sounds do not play on the website; wildlife videos stay silent.
 
 ## Adding a new animal
 

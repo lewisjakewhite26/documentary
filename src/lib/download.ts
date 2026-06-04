@@ -1,4 +1,5 @@
 // src/lib/download.ts
+import { getMusicPublicUrl } from './music';
 import { getVideoPublicUrl, SUPABASE_CONFIG_MESSAGE } from './supabase';
 
 export type DownloadResult =
@@ -12,7 +13,7 @@ export type DownloadProgress = {
   percent: number | null;
 };
 
-/** Videos above this size show a “large file” hint while downloading. */
+/** Files above this size show a “large file” hint while downloading. */
 export const LARGE_DOWNLOAD_BYTES = 10 * 1024 * 1024;
 
 export function formatDownloadSize(bytes: number): string {
@@ -27,19 +28,14 @@ export function isLargeDownload(total: number | null): boolean {
 }
 
 /**
- * Download a video file from Supabase storage as an MP4.
- * Uses fetch to retrieve the blob, creates an object URL, and programmatically clicks a hidden anchor.
- * Works on iPad Safari because it uses a user‑initiated click (the modal Download button).
+ * Fetch a public storage URL and save as a download (user‑initiated click).
+ * Works on iPad Safari when triggered from a button press.
  */
-export async function downloadVideo(
+export async function downloadFromPublicUrl(
+  publicUrl: string,
   filename: string,
   onProgress?: (progress: DownloadProgress) => void
 ): Promise<DownloadResult> {
-  const publicUrl = getVideoPublicUrl(filename);
-  if (!publicUrl) {
-    return { ok: false, message: SUPABASE_CONFIG_MESSAGE };
-  }
-
   const report = (loaded: number, total: number | null) => {
     onProgress?.({
       loaded,
@@ -54,7 +50,7 @@ export async function downloadVideo(
   try {
     const response = await fetch(publicUrl);
     if (!response.ok) {
-      console.error('Failed to fetch video for download', response.status);
+      console.error('Failed to fetch file for download', response.status);
       return {
         ok: false,
         message: `Download failed (${response.status}). Please try again.`,
@@ -104,4 +100,26 @@ export async function downloadVideo(
       message: 'Download failed. Check your connection and try again.',
     };
   }
+}
+
+export async function downloadVideo(
+  filename: string,
+  onProgress?: (progress: DownloadProgress) => void
+): Promise<DownloadResult> {
+  const publicUrl = getVideoPublicUrl(filename);
+  if (!publicUrl) {
+    return { ok: false, message: SUPABASE_CONFIG_MESSAGE };
+  }
+  return downloadFromPublicUrl(publicUrl, filename, onProgress);
+}
+
+export async function downloadMusic(
+  filename: string,
+  onProgress?: (progress: DownloadProgress) => void
+): Promise<DownloadResult> {
+  const publicUrl = getMusicPublicUrl(filename);
+  if (!publicUrl) {
+    return { ok: false, message: SUPABASE_CONFIG_MESSAGE };
+  }
+  return downloadFromPublicUrl(publicUrl, filename, onProgress);
 }

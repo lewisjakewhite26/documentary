@@ -2,6 +2,7 @@ import React from 'react';
 import AnimalPicker from '../components/AnimalPicker';
 import Hero from '../components/Hero';
 import Layout from '../components/Layout';
+import NatureSounds from '../components/NatureSounds';
 import { Link } from 'react-router-dom';
 import { useVideos } from '../hooks/useVideos';
 
@@ -26,6 +27,8 @@ const HomePage: React.FC = () => {
             </span>
           </Link>
         </section>
+
+        <NatureSounds />
 
         <section>
           <h2 className="text-2xl md:text-3xl font-bold mb-4">Pick an animal</h2>
